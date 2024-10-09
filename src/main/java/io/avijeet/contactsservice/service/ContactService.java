@@ -1,5 +1,7 @@
 package io.avijeet.contactsservice.service;
 
-public interface ContactService {
+import io.avijeet.contactsservice.pojo.Contact;
 
+public interface ContactService {
+    Contact getContactById(String id);
 }
