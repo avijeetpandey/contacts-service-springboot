@@ -5,11 +5,7 @@ import io.avijeet.contactsservice.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ContactController {
@@ -20,5 +16,11 @@ public class ContactController {
     public ResponseEntity<Contact> getContact(@PathVariable String id) {
        Contact contact = contactService.getContactById(id);
        return new ResponseEntity<>(contact, HttpStatus.OK);
+    }
+
+    @PostMapping("/contact")
+    public ResponseEntity<String> createContact(@RequestBody Contact contact) {
+        contactService.saveContact(contact);
+        return new ResponseEntity<>(contact.getId(), HttpStatus.CREATED);
     }
 }
