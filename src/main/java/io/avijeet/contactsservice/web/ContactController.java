@@ -1,5 +1,6 @@
 package io.avijeet.contactsservice.web;
 
+import io.avijeet.contactsservice.exception.NoContactException;
 import io.avijeet.contactsservice.pojo.Contact;
 import io.avijeet.contactsservice.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,12 @@ public class ContactController {
 
     @GetMapping("/contact/{id}")
     public ResponseEntity<Contact> getContact(@PathVariable String id) {
-       Contact contact = contactService.getContactById(id);
-       return new ResponseEntity<>(contact, HttpStatus.OK);
+       try {
+           Contact contact = contactService.getContactById(id);
+           return new ResponseEntity<>(contact, HttpStatus.OK);
+       } catch (NoContactException e) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
     }
 
     @PostMapping("/contact")
@@ -29,15 +34,23 @@ public class ContactController {
 
     @PutMapping("/contact")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
-        int index = contactService.findContactIndexById(contact.getId());
-        Contact updatedContact = contactService.updateContact(contact, index);
-        return new ResponseEntity<>(updatedContact, HttpStatus.OK);
+        try {
+            int index = contactService.findContactIndexById(contact.getId());
+            Contact updatedContact = contactService.updateContact(contact, index);
+            return new ResponseEntity<>(updatedContact, HttpStatus.OK);
+        } catch (NoContactException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/contact/{id}")
     public ResponseEntity<HttpStatus> deleteContact(@PathVariable String id) {
-        contactService.deleteContact(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+      try {
+          contactService.deleteContact(id);
+          return new ResponseEntity<>(HttpStatus.OK);
+      } catch (NoContactException e) {
+          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
     }
 
     @GetMapping("/contacts")
