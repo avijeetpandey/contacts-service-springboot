@@ -7,4 +7,5 @@ public interface ContactService {
     void saveContact(Contact contact);
     Contact updateContact(Contact contact, int index);
     int findContactIndexById(String id);
+    void deleteContact(String id);
 }
