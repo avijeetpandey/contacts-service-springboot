@@ -39,4 +39,9 @@ public class ContactServiceImpl implements ContactService {
     public int findContactIndexById(String id) {
        return findIndexById(id);
     }
+
+    @Override
+    public void deleteContact(String id) {
+        contactRepository.deleteContact(findIndexById(id));
+    }
 }

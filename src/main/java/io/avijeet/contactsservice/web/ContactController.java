@@ -30,4 +30,10 @@ public class ContactController {
         Contact updatedContact = contactService.updateContact(contact, index);
         return new ResponseEntity<>(updatedContact, HttpStatus.OK);
     }
+
+    @DeleteMapping("/contact/{id}")
+    public ResponseEntity<HttpStatus> deleteContact(@PathVariable String id) {
+        contactService.deleteContact(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
