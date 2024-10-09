@@ -28,4 +28,15 @@ public class ContactServiceImpl implements ContactService {
     public void saveContact(Contact contact) {
         contactRepository.saveContact(contact);
     }
+
+    @Override
+    public Contact updateContact(Contact contact, int index) {
+        contactRepository.updateContact(contact, index);
+        return contactRepository.getContact(index);
+    }
+
+    @Override
+    public int findContactIndexById(String id) {
+       return findIndexById(id);
+    }
 }

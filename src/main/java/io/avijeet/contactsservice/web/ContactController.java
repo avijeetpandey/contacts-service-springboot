@@ -23,4 +23,11 @@ public class ContactController {
         contactService.saveContact(contact);
         return new ResponseEntity<>(contact.getId(), HttpStatus.CREATED);
     }
+
+    @PutMapping("/contact")
+    public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
+        int index = contactService.findContactIndexById(contact.getId());
+        Contact updatedContact = contactService.updateContact(contact, index);
+        return new ResponseEntity<>(updatedContact, HttpStatus.OK);
+    }
 }
