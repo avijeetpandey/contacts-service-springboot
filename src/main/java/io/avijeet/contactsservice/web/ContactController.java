@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class ContactController {
     @Autowired
@@ -35,5 +38,11 @@ public class ContactController {
     public ResponseEntity<HttpStatus> deleteContact(@PathVariable String id) {
         contactService.deleteContact(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/contacts")
+    public ResponseEntity<List<Contact>> getAllContacts() {
+        List<Contact> contacts = contactService.getAllContacts();
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 }

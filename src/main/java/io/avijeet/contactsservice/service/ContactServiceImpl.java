@@ -5,6 +5,8 @@ import io.avijeet.contactsservice.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 @Service
@@ -43,5 +45,10 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void deleteContact(String id) {
         contactRepository.deleteContact(findIndexById(id));
+    }
+
+    @Override
+    public List<Contact> getAllContacts() {
+        return contactRepository.getContacts();
     }
 }
