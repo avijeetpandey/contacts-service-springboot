@@ -1,6 +1,4 @@
 package io.avijeet.contactsservice.web;
-
-import io.avijeet.contactsservice.exception.NoContactException;
 import io.avijeet.contactsservice.pojo.Contact;
 import io.avijeet.contactsservice.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ContactController {
@@ -15,45 +14,33 @@ public class ContactController {
     private ContactService contactService;
 
     @GetMapping("/contact/{id}")
-    public ResponseEntity<Contact> getContact(@PathVariable String id) {
-       try {
-           Contact contact = contactService.getContactById(id);
-           return new ResponseEntity<>(contact, HttpStatus.OK);
-       } catch (NoContactException e) {
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
+    public ResponseEntity<Contact> getContact(@PathVariable Long id) {
+       Optional<Contact> optionalContact = contactService.findById(id);
+       return optionalContact.map(contact -> new ResponseEntity<>(contact, HttpStatus.OK))
+               .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/contact")
-    public ResponseEntity<String> createContact(@RequestBody Contact contact) {
-        contactService.saveContact(contact);
-        return new ResponseEntity<>(contact.getId(), HttpStatus.CREATED);
+    public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
+        Contact savedContact = contactService.save(contact);
+        return new ResponseEntity<>(savedContact, HttpStatus.CREATED);
     }
 
     @PutMapping("/contact")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
-        try {
-            int index = contactService.findContactIndexById(contact.getId());
-            Contact updatedContact = contactService.updateContact(contact, index);
-            return new ResponseEntity<>(updatedContact, HttpStatus.OK);
-        } catch (NoContactException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Contact updatedContact = contactService.update(contact.getId(), contact);
+        return new ResponseEntity<>(updatedContact, HttpStatus.OK);
     }
 
     @DeleteMapping("/contact/{id}")
-    public ResponseEntity<HttpStatus> deleteContact(@PathVariable String id) {
-      try {
-          contactService.deleteContact(id);
-          return new ResponseEntity<>(HttpStatus.OK);
-      } catch (NoContactException e) {
-          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-      }
+    public ResponseEntity<HttpStatus> deleteContact(@PathVariable Long id) {
+        contactService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/contacts")
     public ResponseEntity<List<Contact>> getAllContacts() {
-        List<Contact> contacts = contactService.getAllContacts();
+        List<Contact> contacts = contactService.findAll();
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 }
