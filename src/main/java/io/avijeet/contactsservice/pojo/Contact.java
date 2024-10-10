@@ -1,9 +1,17 @@
 package io.avijeet.contactsservice.pojo;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.UUID;
 
+@Entity
 public class Contact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
+
     private String name;
     private String phoneNumber;
 
@@ -13,9 +21,7 @@ public class Contact {
         this.phoneNumber = phoneNumber;
     }
 
-    public Contact() {
-        this.id = UUID.randomUUID().toString();
-    }
+    public Contact() { }
 
     public String getName() {
         return this.name;
